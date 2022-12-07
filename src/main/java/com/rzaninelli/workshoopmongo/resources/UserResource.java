@@ -1,5 +1,6 @@
 package com.rzaninelli.workshoopmongo.resources;
 
+import com.rzaninelli.workshoopmongo.domain.Post;
 import com.rzaninelli.workshoopmongo.domain.User;
 import com.rzaninelli.workshoopmongo.dto.UserDTO;
 import com.rzaninelli.workshoopmongo.services.UserService;
@@ -9,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -27,6 +25,12 @@ public class UserResource {
         List<User> list = userService.findAll();
         List<UserDTO> listDto = list.stream().map(UserDTO::new).toList();
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
+        User obj = userService.findById(id);
+        return ResponseEntity.ok().body(obj.getPosts());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
